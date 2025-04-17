@@ -4,7 +4,6 @@ services:
   mongodb:
     image: mongo:latest
     container_name: mongodb
-    restart: always
     ports:
       - "27017:27017"
     volumes:
@@ -15,7 +14,6 @@ services:
   caller-operator-service:
     build: ./caller-operator-service
     container_name: caller-operator-service
-    restart: always
     ports:
       - "3001:3000"
     environment:
@@ -31,7 +29,6 @@ services:
   team-service:
     build: ./team-service
     container_name: team-service
-    restart: always
     ports:
       - "3002:3000"
     environment:
@@ -47,7 +44,6 @@ services:
   incident-service:
     build: ./incident-service
     container_name: incident-service
-    restart: always
     ports:
       - "3003:3000"
     environment:
