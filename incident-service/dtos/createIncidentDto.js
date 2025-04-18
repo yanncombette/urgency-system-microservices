@@ -1,3 +1,5 @@
+import IncidentService from "../services/incidentService.js";
+
 export class CreateIncidentDTO {
   /**
    * @param {string} localisation - The location of the incident
@@ -38,9 +40,6 @@ export class CreateIncidentDTO {
       throw new Error("The operatorId is required and must be a string.");
     }
 
-    if (!this.teamId || typeof this.teamId !== "string") {
-      throw new Error("The teamId is required and must be a string.");
-    }
   }
 
   /**
@@ -58,7 +57,19 @@ export class CreateIncidentDTO {
       json.description,
       json.callerId,
       json.operatorId,
-      json.teamId
+    );
+  }
+
+  /**
+   * Creates an incident using the IncidentService
+   * @returns {Promise<Object>} - The created incident
+   */
+  async createIncident() {
+    return await IncidentService.reportIncident(
+      this.localisation,
+      this.description,
+      this.callerId,
+      this.operatorId
     );
   }
 }

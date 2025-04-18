@@ -18,7 +18,7 @@ services:
       - "3001:3000"
     environment:
       - PORT=3000
-      - MONGODB_URI=mongodb://mongodb:27017/urgency-system
+      - MONGODB_URI=mongodb://mongodb:27017/caller-operator
       - TEAM_SERVICE_URL=http://team-service:3000
       - INCIDENT_SERVICE_URL=http://incident-service:3000
     depends_on:
@@ -33,7 +33,7 @@ services:
       - "3002:3000"
     environment:
       - PORT=3000
-      - MONGODB_URI=mongodb://mongodb:27017/urgency-system
+      - MONGODB_URI=mongodb://mongodb:27017/team
       - CALLER_OPERATOR_SERVICE_URL=http://caller-operator-service:3000
       - INCIDENT_SERVICE_URL=http://incident-service:3000
     depends_on:
@@ -48,7 +48,7 @@ services:
       - "3003:3000"
     environment:
       - PORT=3000
-      - MONGODB_URI=mongodb://mongodb:27017/urgency-system
+      - MONGODB_URI=mongodb://mongodb:27017/incident
       - CALLER_OPERATOR_SERVICE_URL=http://caller-operator-service:3000
       - TEAM_SERVICE_URL=http://team-service:3000
     depends_on:

@@ -32,7 +32,7 @@ const incidentSchema = new Schema({
     },
     teamId: {
         type: String,
-        required: true,
+        required: false,
     }
 }, {
     timestamps: true

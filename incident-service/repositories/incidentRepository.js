@@ -20,7 +20,7 @@ class IncidentRepository {
 
     async getAllIncidents(filter = {}) {
         try {
-            return await Incident.find(filter);
+            return Incident.find(filter); // Return the query object
         } catch (error) {
             throw new Error(`Error fetching incidents: ${error.message}`);
         }
