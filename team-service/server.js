@@ -1,5 +1,5 @@
 import express from "express";
-import { connectDB } from "./config/database.js";
+import { connectDB } from "./config/db.js";
 import dotenv from "dotenv";
 import teamRoutes from "./routes/teamRoutes.js";
 
