@@ -23,7 +23,7 @@ export const getAvailableTeam = async (req, res) => {
   try {
     const team = await teamRepository.getAvailableTeam();
     if (!team) {
-      return res.status(404).json({ message: "No available team" });
+      return res.status(200).json(null);
     }
     res.status(200).json(teamDto(team));
   } catch (error) {
