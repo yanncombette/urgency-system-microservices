@@ -32,6 +32,23 @@ class CallerService {
       throw new Error(`Error fetching caller by ID: ${error.response?.data?.message || error.message}`);
     }
   }
+
+  /**
+   * Fetches an operator by ID from the caller-operator-service
+   * @param {string} id - The ID of the operator
+   * @returns {Promise<Object>} - The operator data
+   */
+  async getOperatorById(id) {
+    try {
+      const response = await axios.get(`${CALLER_OPERATOR_SERVICE_URL}/api/operators/${id}`);
+      return response.data;
+    } catch (error) {
+      if (error.response?.status === 404) {
+        throw new Error(`Operator with ID ${id} not found`);
+      }
+      throw new Error(`Error fetching operator by ID: ${error.response?.data?.message || error.message}`);
+    }
+  }
 }
 
 export default new CallerService();

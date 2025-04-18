@@ -22,7 +22,10 @@ export const createIncident = async (req, res) => {
 export const getAllIncidents = async (req, res) => {
   try {
     const incidents = await incidentRepository.getAllIncidents();
-    res.status(200).json(incidents.map((incident) => IncidentDTO.fromEntity(incident).toJSON()));
+    const incidentDTOs = await Promise.all(
+      incidents.map((incident) => IncidentDTO.fromEntity(incident))
+    );
+    res.status(200).json(incidentDTOs.map((dto) => dto.toJSON()));
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

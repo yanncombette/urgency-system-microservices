@@ -1,24 +1,26 @@
 import incidentRepository from "../repositories/incidentRepository.js";
+import CallerService from "../services/callerService.js";
+
 export class IncidentDTO {
   /**
    * @param {string} id - Incident identifier
    * @param {string} localisation - Location of the incident
    * @param {string} description - Description of the incident
    * @param {string} status - Status of the incident
-   * @param {string} callerId -F Identifier of the caller
-   * @param {string} operatorId - Identifier of the operator
+   * @param {Object} caller - Full caller object
+   * @param {Object} operator - Full operator object
    * @param {string} teamId - Identifier of the team
    * @param {Date} reportedAt - Date the incident was reported
    * @param {Date} createdAt - Date the incident was created
    * @param {Date} updatedAt - Date the incident was last updated
    */
-  constructor(id, localisation, description, status, callerId, operatorId, teamId, reportedAt, createdAt, updatedAt) {
+  constructor(id, localisation, description, status, caller, operator, teamId, reportedAt, createdAt, updatedAt) {
     this.id = id;
     this.localisation = localisation;
     this.description = description;
     this.status = status;
-    this.callerId = callerId;
-    this.operatorId = operatorId;
+    this.caller = caller;
+    this.operator = operator;
     this.teamId = teamId;
     this.reportedAt = reportedAt;
     this.createdAt = createdAt;
@@ -26,18 +28,23 @@ export class IncidentDTO {
   }
 
   /**
-   * Creates a DTO from an Incident entity
+   * Creates a DTO from an Incident entity and populates related data
    * @param {Incident} incident - The Incident entity
-   * @returns {IncidentDTO} - The DTO
+   * @returns {Promise<IncidentDTO>} - The DTO
    */
-  static fromEntity(incident) {
+  static async fromEntity(incident) {
+    const [caller, operator, team] = await Promise.all([
+      CallerService.getCallerById(incident.callerId),
+      CallerService.getOperatorById(incident.operatorId), // Assuming operator is handled similarly
+    ]);
+
     return new IncidentDTO(
       incident._id,
       incident.localisation,
       incident.description,
       incident.status,
-      incident.callerId,
-      incident.operatorId,
+      caller,
+      operator,
       incident.teamId,
       incident.reportedAt,
       incident.createdAt,
@@ -55,8 +62,8 @@ export class IncidentDTO {
       localisation: this.localisation,
       description: this.description,
       status: this.status,
-      callerId: this.callerId,
-      operatorId: this.operatorId,
+      caller: this.caller,
+      operator: this.operator,
       teamId: this.teamId,
       reportedAt: this.reportedAt,
       createdAt: this.createdAt,
