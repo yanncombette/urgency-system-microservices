@@ -46,14 +46,14 @@ export const updateTeamAvailability = async (req, res) => {
   }
 };
 
-export const getTeamById = async (id) => {
-  console.log("Recherche d'équipe avec ID:", id);
+export const getTeamById = async (req, res) => {
   try {
-    const team = await Team.findById(id);
-    console.log("Résultat de la recherche:", team);
-    return team;
-  } catch (err) {
-    console.error("Erreur lors de la recherche:", err);
-    throw err;
+    const team = await teamRepository.getTeamById(req.params.id);
+    if (!team) {
+      return res.status(404).json({ message: "Team not found" });
+    }
+    res.status(200).json(teamDto(team));
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 };
