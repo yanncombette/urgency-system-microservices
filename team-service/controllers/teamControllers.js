@@ -45,3 +45,15 @@ export const updateTeamAvailability = async (req, res) => {
     res.status(400).json({ message: error.message });
   }
 };
+
+export const getTeamById = async (id) => {
+  console.log("Recherche d'équipe avec ID:", id);
+  try {
+    const team = await Team.findById(id);
+    console.log("Résultat de la recherche:", team);
+    return team;
+  } catch (err) {
+    console.error("Erreur lors de la recherche:", err);
+    throw err;
+  }
+};
