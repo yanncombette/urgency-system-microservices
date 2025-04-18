@@ -1,5 +1,6 @@
 import incidentRepository from "../repositories/incidentRepository.js";
 import CallerService from "../services/callerService.js";
+import teamService from "../services/teamService.js";
 
 export class IncidentDTO {
   /**
@@ -14,14 +15,14 @@ export class IncidentDTO {
    * @param {Date} createdAt - Date the incident was created
    * @param {Date} updatedAt - Date the incident was last updated
    */
-  constructor(id, localisation, description, status, caller, operator, teamId, reportedAt, createdAt, updatedAt) {
+  constructor(id, localisation, description, status, caller, operator, team, reportedAt, createdAt, updatedAt) {
     this.id = id;
     this.localisation = localisation;
     this.description = description;
     this.status = status;
     this.caller = caller;
     this.operator = operator;
-    this.teamId = teamId;
+    this.team = team;
     this.reportedAt = reportedAt;
     this.createdAt = createdAt;
     this.updatedAt = updatedAt;
@@ -33,22 +34,24 @@ export class IncidentDTO {
    * @returns {Promise<IncidentDTO>} - The DTO
    */
   static async fromEntity(incident) {
+    const data = incident._doc ?? incident;
     const [caller, operator, team] = await Promise.all([
-      CallerService.getCallerById(incident.callerId),
-      CallerService.getOperatorById(incident.operatorId), // Assuming operator is handled similarly
+      CallerService.getCallerById(data.callerId),
+      CallerService.getOperatorById(data.operatorId),
+      data.teamId ? teamService.getTeamById(data.teamId) : null
     ]);
-
+  
     return new IncidentDTO(
-      incident._id,
-      incident.localisation,
-      incident.description,
-      incident.status,
+      data._id,
+      data.localisation,
+      data.description,
+      data.status,
       caller,
       operator,
-      incident.teamId,
-      incident.reportedAt,
-      incident.createdAt,
-      incident.updatedAt
+      team,
+      data.reportedAt,
+      data.createdAt,
+      data.updatedAt
     );
   }
 
@@ -64,7 +67,7 @@ export class IncidentDTO {
       status: this.status,
       caller: this.caller,
       operator: this.operator,
-      teamId: this.teamId,
+      team: this.team,
       reportedAt: this.reportedAt,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt

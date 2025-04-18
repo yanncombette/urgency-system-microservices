@@ -1,3 +1,4 @@
+import { IncidentDTO } from "../dtos/incidentDto.js";
 import IncidentService from "../services/incidentService.js";
 
 export class CreateIncidentDTO {
@@ -6,14 +7,12 @@ export class CreateIncidentDTO {
    * @param {string} description - The description of the incident
    * @param {string} callerId - The ID of the caller
    * @param {string} operatorId - The ID of the operator
-   * @param {string} teamId - The ID of the team
    */
-  constructor(localisation, description, callerId, operatorId, teamId) {
+  constructor(localisation, description, callerId, operatorId) {
     this.localisation = localisation;
     this.description = description;
     this.callerId = callerId;
     this.operatorId = operatorId;
-    this.teamId = teamId;
     this.reportedAt = new Date();
     this.status = "pending"; // Default status
     this.validate();
@@ -39,7 +38,6 @@ export class CreateIncidentDTO {
     if (!this.operatorId || typeof this.operatorId !== "string") {
       throw new Error("The operatorId is required and must be a string.");
     }
-
   }
 
   /**
@@ -65,11 +63,15 @@ export class CreateIncidentDTO {
    * @returns {Promise<Object>} - The created incident
    */
   async createIncident() {
-    return await IncidentService.reportIncident(
+    const createdIncident = await IncidentService.reportIncident(
       this.localisation,
       this.description,
       this.callerId,
       this.operatorId
     );
+
+    return await IncidentDTO.fromEntity({
+      ...createdIncident
+    });
   }
 }
